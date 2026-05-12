@@ -123,19 +123,9 @@
   }
   #three-canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
 
-  /* ── HERO MOBILE: imagem estática no lugar do canvas WebGL ──── */
+  /* ── HERO MOBILE: canvas vertical ──── */
   @media(max-width:768px){
-    .hero-track { height:250vh; height:250svh; }
-
-    #three-canvas { display: none; }
-
-    #hero-fixed {
-      background-image:
-        linear-gradient(to bottom, rgba(8,12,21,.55) 0%, rgba(8,12,21,.25) 40%, rgba(8,12,21,.85) 100%),
-        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=900&q=85');
-      background-size: cover;
-      background-position: center center;
-    }
+    .hero-track { height:300vh; height:300svh; }
   }
 
   .hero-vignette-l {
@@ -1156,7 +1146,7 @@ scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
 
 // ── Frame extraction ────────────────────────────────────────────
 const isMobile = window.innerWidth < 768;
-const FRAMES   = 90;
+const FRAMES   = isMobile ? 60 : 90;
 const frames   = [];
 let   ready    = false;
 let   lastIdx  = -1;
@@ -1165,19 +1155,10 @@ const ldLine = document.getElementById('ld-line-el');
 const ldPct  = document.getElementById('loading-pct');
 const ldScr  = document.getElementById('loading-screen');
 
-// ── Mobile: usa imagem de fundo CSS, pula extração de vídeo ─────
-if(isMobile){
-  ldLine.style.setProperty('--w','100%');
-  ldPct.textContent = '100%';
-  ready = true;
-  setTimeout(()=>{
-    ldScr.classList.add('hidden');
-    setTimeout(()=> ldScr.style.display='none', 750);
-  }, 400);
-}
-
 const video = document.createElement('video');
-video.src='video.mp4'; video.muted=true; video.playsInline=true;
+// Mobile: usa video vertical 9:16 | Desktop: usa video horizontal 16:9
+video.src = isMobile ? 'video-mobile.mp4' : 'video.mp4';
+video.muted=true; video.playsInline=true;
 video.setAttribute('playsinline','');
 video.setAttribute('webkit-playsinline','');
 video.preload='auto'; video.crossOrigin='anonymous'; video.load();
@@ -1194,7 +1175,6 @@ function waitSeeked(vid, timeout=3000){
 }
 
 video.addEventListener('loadedmetadata', async () => {
-  if(isMobile) return; // mobile usa imagem estática
   // Pequena pausa: alguns navegadores mobile reportam 0 antes de estar pronto
   await new Promise(r => setTimeout(r, 150));
 
@@ -1205,9 +1185,9 @@ video.addEventListener('loadedmetadata', async () => {
   extCanvas.width  = vw;
   extCanvas.height = vh;
 
-  // Resolução menor no mobile poupa memória GPU e RAM
-  const maxW = isMobile ? 720 : 1280;
-  const maxH = isMobile ? 405 : 720;
+  // Mobile: vídeo vertical 9:16 → resolução portrait | Desktop: 16:9
+  const maxW = isMobile ? 540 : 1280;
+  const maxH = isMobile ? 960 : 720;
   dispCanvas.width  = Math.min(vw, maxW);
   dispCanvas.height = Math.min(vh, maxH);
   mat.uniforms.uVRes.value.set(dispCanvas.width, dispCanvas.height);
@@ -1281,7 +1261,7 @@ window.addEventListener('scroll', ()=>{
   if(!ready) return;
   const trackMax = TRACK_VH * innerHeight;
   const frac     = Math.min(scrollY / trackMax, 1);
-  if(!isMobile) showFrame(Math.round(frac * (FRAMES-1)));
+  showFrame(Math.round(frac * (FRAMES-1)));
 
   const pageMax = document.documentElement.scrollHeight - innerHeight;
   prog.style.width = (scrollY/pageMax*100)+'%';
