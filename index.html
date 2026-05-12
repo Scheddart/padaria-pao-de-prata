@@ -125,7 +125,7 @@
 
   /* ── HERO MOBILE: canvas vertical ──── */
   @media(max-width:768px){
-    .hero-track { height:300vh; height:300svh; }
+    .hero-track { height:220vh; height:220svh; }
   }
 
   .hero-vignette-l {
@@ -240,17 +240,18 @@
   /* ── HERO MOBILE ───────────────────────────────────────────────── */
   @media(max-width:640px){
     .hero-content {
-      justify-content: flex-end;
-      padding: 0 6vw 110px;
+      justify-content: center;
+      padding: 80px 6vw 0;
     }
     #titleGroup { max-width: 100%; }
     .hero-eyebrow { font-size:.62rem; letter-spacing:3px; margin-bottom:14px; }
     .hero-eyebrow::before, .hero-eyebrow::after { width:20px; }
-    .hero-title { font-size: clamp(2.8rem, 11vw, 4rem); line-height:1.08; margin-bottom:8px; }
-    .hero-subtitle { font-size: clamp(1.2rem, 5vw, 1.6rem); margin-bottom:24px; }
-    .hero-ctas { flex-direction:column; gap:10px; width:100%; }
+    .hero-title { font-size: clamp(2.6rem, 10vw, 3.6rem); line-height:1.08; margin-bottom:8px; }
+    .hero-subtitle { font-size: clamp(1.1rem, 4.5vw, 1.5rem); margin-bottom:28px; }
+    .hero-ctas { flex-direction:column; gap:10px; width:100%; max-width:360px; }
     .hero-ctas .btn { width:100%; justify-content:center; padding:14px 20px; }
-    .hero-social { bottom:28px; right:5vw; gap:8px; }
+    .hero-vignette-b { height:20%; }
+    .hero-social { bottom:24px; right:5vw; gap:8px; }
     .hero-social .soc { width:36px; height:36px; }
     .scroll-cue { display:none; }
   }
@@ -1111,7 +1112,11 @@ import * as THREE from 'three';
 const canvas   = document.getElementById('three-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.setSize(innerWidth, innerHeight);
+
+// Usa visualViewport para pegar a altura real da tela no mobile
+function getVW(){ return window.visualViewport ? window.visualViewport.width  : innerWidth; }
+function getVH(){ return window.visualViewport ? window.visualViewport.height : innerHeight; }
+renderer.setSize(getVW(), getVH());
 
 const scene  = new THREE.Scene();
 const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
@@ -1126,7 +1131,7 @@ tex.minFilter = tex.magFilter = THREE.LinearFilter;
 const mat = new THREE.ShaderMaterial({
   uniforms:{
     uTex:  { value:tex },
-    uRes:  { value:new THREE.Vector2(innerWidth, innerHeight) },
+    uRes:  { value:new THREE.Vector2(getVW(), getVH()) },
     uVRes: { value:new THREE.Vector2(1280,720) }
   },
   vertexShader:  `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.); }`,
@@ -1135,11 +1140,12 @@ const mat = new THREE.ShaderMaterial({
     uniform vec2 uRes,uVRes;
     varying vec2 vUv;
     void main(){
+      // COVER: preenche a tela toda, corta o excesso (sem barras pretas)
       float rs=uRes.x/uRes.y, ri=uVRes.x/uVRes.y;
       vec2 uv=rs<ri
-        ? vec2(vUv.x*rs/ri+(1.-rs/ri)*.5, vUv.y)
-        : vec2(vUv.x, vUv.y*ri/rs+(1.-ri/rs)*.5);
-      gl_FragColor=texture2D(uTex,uv);
+        ? vec2((vUv.x-.5)*(ri/rs)+.5, vUv.y)
+        : vec2(vUv.x, (vUv.y-.5)*(rs/ri)+.5);
+      gl_FragColor=texture2D(uTex, clamp(uv,0.,1.));
     }`
 });
 scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
@@ -1242,11 +1248,7 @@ function showFrame(i){
 
 // Redesenha ao girar a tela no mobile
 window.addEventListener('orientationchange', () => {
-  setTimeout(() => {
-    renderer.setSize(innerWidth, innerHeight);
-    mat.uniforms.uRes.value.set(innerWidth, innerHeight);
-    if(lastIdx >= 0){ tex.needsUpdate=true; renderer.render(scene,camera); }
-  }, 300);
+  setTimeout(() => { onResize(); }, 400);
 });
 
 // ── Scroll ──────────────────────────────────────────────────────
@@ -1254,8 +1256,8 @@ const heroContent = document.getElementById('heroContent');
 const titleGroup  = document.getElementById('titleGroup');
 const scrollCue   = document.getElementById('scrollCue');
 const prog        = document.getElementById('prog');
-// Mobile: track menor (3x a tela) alinhado ao CSS hero-track:350svh
-const TRACK_VH    = isMobile ? 3 : 5;
+// Mobile: 2x a tela alinhado ao CSS hero-track:220svh | Desktop: 5x
+const TRACK_VH    = isMobile ? 2 : 5;
 
 window.addEventListener('scroll', ()=>{
   if(!ready) return;
@@ -1285,12 +1287,12 @@ window.addEventListener('scroll', ()=>{
 }, { passive:true });
 
 function onResize(){
-  renderer.setSize(innerWidth, innerHeight);
-  mat.uniforms.uRes.value.set(innerWidth, innerHeight);
+  const w = getVW(), h = getVH();
+  renderer.setSize(w, h);
+  mat.uniforms.uRes.value.set(w, h);
   if(lastIdx>=0){ tex.needsUpdate=true; renderer.render(scene,camera); }
 }
 window.addEventListener('resize', onResize);
-// Suporte ao visualViewport do mobile (barra de endereço dinâmica)
 if(window.visualViewport){
   window.visualViewport.addEventListener('resize', onResize);
 }
