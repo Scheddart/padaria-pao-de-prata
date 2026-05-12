@@ -3,7 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Padaria Pão de Prata — Desde 1994</title>
+  <title>Padaria Pão de Prata — Desde 1994 | Leme, SP</title>
+
+  <!-- ── SEO ──────────────────────────────────────────────────── -->
+  <meta name="description" content="Padaria Pão de Prata em Leme, SP. Tradição desde 1994. Pães artesanais, salgados, bolos e confeitaria. 4 unidades. Peça pelo iFood ou WhatsApp.">
+  <meta name="keywords" content="padaria leme sp, pão de prata, padaria artesanal leme, delivery leme, pão francês leme, bolo confeitaria leme, padaria pão de prata">
+  <meta name="author" content="Padaria Pão de Prata">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://padaria-pao-de-prata.surge.sh">
+
+  <!-- Open Graph / redes sociais -->
+  <meta property="og:type" content="restaurant">
+  <meta property="og:title" content="Padaria Pão de Prata — Desde 1994 | Leme, SP">
+  <meta property="og:description" content="Tradição desde 1994 em Leme, SP. Pães artesanais, salgados, bolos e confeitaria. Peça pelo iFood ou WhatsApp. 4 unidades.">
+  <meta property="og:url" content="https://padaria-pao-de-prata.surge.sh">
+  <meta property="og:image" content="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/PAO-DE-PRATA-logo-para-caixa-10x101-1-970x1024.png">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Padaria Pão de Prata">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Padaria Pão de Prata — Desde 1994 | Leme, SP">
+  <meta name="twitter:description" content="Tradição desde 1994 em Leme, SP. Pães artesanais, salgados, bolos e confeitaria.">
+  <meta name="twitter:image" content="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/PAO-DE-PRATA-logo-para-caixa-10x101-1-970x1024.png">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Bakery",
+    "name": "Padaria Pão de Prata",
+    "description": "Padaria artesanal em Leme, SP com tradição desde 1994. Pães, salgados, bolos e confeitaria.",
+    "url": "https://padaria-pao-de-prata.surge.sh",
+    "telephone": "+55-19-3571-7140",
+    "image": "https://padariapaodeprata.com.br/wp-content/uploads/2023/04/PAO-DE-PRATA-logo-para-caixa-10x101-1-970x1024.png",
+    "priceRange": "R$",
+    "servesCuisine": "Padaria Brasileira",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Hermínio Ometto, 1538",
+      "addressLocality": "Leme",
+      "addressRegion": "SP",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -22.1874447,
+      "longitude": -47.3879385
+    },
+    "openingHoursSpecification": [
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "06:00", "closes": "21:00" },
+      { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": "06:00", "closes": "20:00" }
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "bestRating": "5",
+      "reviewCount": "500"
+    },
+    "sameAs": [
+      "https://www.instagram.com/paodeprataleme/",
+      "https://www.facebook.com/p/Padaria-P%C3%A3o-de-Prata-100063654184460/",
+      "https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c"
+    ]
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
@@ -93,6 +158,27 @@
   }
   .nav-links a:hover { color:var(--gold); }
   @media(max-width:640px){ .nav-links{display:none;} }
+
+  /* STATUS BADGE */
+  .nav-status {
+    display:inline-flex; align-items:center; gap:7px;
+    background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3);
+    border-radius:20px; padding:5px 13px;
+    font-size:.68rem; font-weight:500; letter-spacing:1.5px;
+    text-transform:uppercase; color:rgba(255,255,255,.75);
+    backdrop-filter:blur(8px);
+  }
+  .status-dot {
+    width:7px; height:7px; border-radius:50%;
+    background:#22c55e;
+    animation: statusPulse 2s infinite;
+    flex-shrink:0;
+  }
+  @keyframes statusPulse {
+    0%,100%{ box-shadow:0 0 0 0 rgba(34,197,94,.6); }
+    50%    { box-shadow:0 0 0 5px rgba(34,197,94,.0); }
+  }
+  @media(max-width:640px){ .nav-status{ padding:4px 10px; font-size:.6rem; } }
 
   /* HERO CONTENT */
   .hero-content {
@@ -435,6 +521,50 @@
   .footer-copy { font-size:.72rem; color:rgba(255,255,255,.2); }
   .footer-soc { display:flex; gap:10px; }
 
+  /* ─── GALLERY ─────────────────────────────────────────────────── */
+  .gallery-section {
+    background: var(--ink); padding: 90px 5vw 80px;
+  }
+  .gallery-header { text-align:center; margin-bottom:52px; }
+  .gallery-header .section-tag { color:var(--gold); justify-content:center; }
+  .gallery-header .section-tag::before { display:none; }
+  .gallery-heading {
+    font-family:'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+    font-weight:300; color:var(--white); line-height:1.2; margin-bottom:12px;
+  }
+  .gallery-heading em { color:var(--gold); font-style:italic; }
+  .gallery-sub { font-size:.9rem; color:rgba(255,255,255,.4); }
+
+  .gallery-grid {
+    columns: 4 220px; gap: 12px;
+  }
+  .gallery-item {
+    break-inside: avoid; margin-bottom: 12px;
+    overflow: hidden; border-radius: 3px;
+    position: relative; cursor: pointer;
+  }
+  .gallery-item img {
+    width:100%; display:block;
+    transition: transform .5s ease, filter .5s ease;
+    filter: brightness(.88) saturate(.9);
+  }
+  .gallery-item:hover img { transform:scale(1.04); filter:brightness(1) saturate(1.1); }
+  .gallery-item .gallery-overlay {
+    position:absolute; inset:0;
+    background: linear-gradient(to top, rgba(8,12,21,.7) 0%, transparent 50%);
+    opacity:0; transition:opacity .35s;
+    display:flex; align-items:flex-end;
+    padding:16px;
+  }
+  .gallery-item:hover .gallery-overlay { opacity:1; }
+  .gallery-overlay-label {
+    font-size:.7rem; letter-spacing:2px; text-transform:uppercase;
+    color:rgba(255,255,255,.8);
+  }
+  .gallery-cta { text-align:center; margin-top:48px; }
+  .gallery-cta p { font-size:.85rem; color:rgba(255,255,255,.35); margin-bottom:18px; }
+
   /* ─── ANIMATIONS ──────────────────────────────────────────────── */
   @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
   @keyframes pulse  { 0%,100%{opacity:.4;} 50%{opacity:1;} }
@@ -465,8 +595,13 @@
       <a href="#" class="nav-logo">Pão de <span>Prata</span></a>
       <div class="nav-links">
         <a href="#products">Cardápio</a>
+        <a href="#gallery">Galeria</a>
         <a href="https://www.instagram.com/paodeprataleme/" target="_blank">Instagram</a>
         <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z" target="_blank">Localização</a>
+      </div>
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span>Aberta agora</span>
       </div>
     </nav>
 
@@ -589,7 +724,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600&q=80" alt="Pão Francês" loading="lazy">
+            <img class="product-img" src="https://padariapaodeprata.com.br/wp-content/uploads/2023/05/20230413_154522-300x300.jpg" alt="Pão Francês" loading="lazy">
             <div class="product-badge">Mais pedido</div>
           </div>
           <div class="product-body">
@@ -607,7 +742,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&q=80" alt="Pão de Queijo" loading="lazy">
+            <img class="product-img" src="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/food-freshly-baked-doughnuts-table-300x300.jpg" alt="Pão de Queijo" loading="lazy">
           </div>
           <div class="product-body">
             <div class="product-cat">Mineiro</div>
@@ -659,7 +794,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=600&q=80" alt="Coxinha" loading="lazy">
+            <img class="product-img" src="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/5cbfbedf0918d65f14b28ea8a73168cb-300x300.jpg" alt="Coxinha" loading="lazy">
             <div class="product-badge">Novidade</div>
           </div>
           <div class="product-body">
@@ -796,6 +931,89 @@
     </a>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════
+     GALLERY
+════════════════════════════════════════ -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-header">
+    <div class="section-tag">Nossa padaria</div>
+    <h2 class="gallery-heading">Momentos que <em>encantam</em></h2>
+    <p class="gallery-sub">Um pouco do nosso dia a dia — produtos, espaço e muito carinho.</p>
+  </div>
+
+  <div class="gallery-grid">
+
+    <div class="gallery-item">
+      <img src="https://padariapaodeprata.com.br/wp-content/uploads/2023/05/20230413_154522-300x300.jpg" alt="Pão Francês Pão de Prata" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Pão Francês</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=85" alt="Interior da padaria" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Nossa padaria</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://padariapaodeprata.com.br/wp-content/uploads/2023/10/0-1024x640.png" alt="Padaria Pão de Prata Leme" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Pão de Prata</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=700&q=85" alt="Bolo de confeitaria" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Confeitaria</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=700&q=85" alt="Pães artesanais" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Pães Artesanais</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1590080875039-c7a63e35e38f?w=700&q=85" alt="Café da padaria" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Café da Manhã</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1484723091739-30990ff27f39?w=700&q=85" alt="Croissant" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Croissants</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=700&q=85" alt="Padaria artesanal" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Tradição</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/food-freshly-baked-doughnuts-table-300x300.jpg" alt="Sonho e doces" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Sonhos & Doces</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1567945716310-4745a6b7844b?w=700&q=85" alt="Vitrine da padaria" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Nossa Vitrine</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1586985289906-406988974504?w=700&q=85" alt="Salgados" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Salgados</span></div>
+    </div>
+
+    <div class="gallery-item">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=85" alt="Ambiente Pão de Prata" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Nosso Espaço</span></div>
+    </div>
+
+  </div>
+
+  <div class="gallery-cta">
+    <p>Veja mais fotos e novidades no nosso Instagram</p>
+    <a href="https://www.instagram.com/paodeprataleme/" target="_blank" class="btn btn-outline-w" style="display:inline-flex;text-decoration:none;border-color:rgba(255,255,255,.3);font-size:.78rem;letter-spacing:1.5px;padding:13px 30px;">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      @paodeprataleme
+    </a>
+  </div>
+</section>
 
 <!-- ══════════════════════════════════════
      FOOTER
