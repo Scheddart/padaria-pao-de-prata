@@ -85,8 +85,8 @@
     --gold2:  #c9a06a;
     --white:  #ffffff;
   }
-  html { scroll-behavior: auto; }
-  body { background: var(--ink); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+  html { scroll-behavior: auto; overflow-x: hidden; }
+  body { background: var(--ink); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; max-width: 100vw; }
 
   /* ─── LOADING ─────────────────────────────────────────────────── */
   #loading-screen {
@@ -123,8 +123,19 @@
   }
   #three-canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
 
+  /* ── HERO MOBILE: imagem estática no lugar do canvas WebGL ──── */
   @media(max-width:768px){
-    .hero-track { height:350vh; height:350svh; }
+    .hero-track { height:250vh; height:250svh; }
+
+    #three-canvas { display: none; }
+
+    #hero-fixed {
+      background-image:
+        linear-gradient(to bottom, rgba(8,12,21,.55) 0%, rgba(8,12,21,.25) 40%, rgba(8,12,21,.85) 100%),
+        url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=900&q=85');
+      background-size: cover;
+      background-position: center center;
+    }
   }
 
   .hero-vignette-l {
@@ -401,6 +412,10 @@
   .products-sub { font-size:.92rem; color:rgba(26,16,8,.55); max-width:440px; margin:0 auto; line-height:1.7; }
 
   .swiper-products { padding: 8px 6vw 48px !important; overflow:visible !important; }
+  @media(max-width:768px){
+    #products { overflow: hidden; }
+    .swiper-products { overflow: hidden !important; padding: 8px 4vw 36px !important; }
+  }
 
   .product-card {
     background:#fff;
@@ -1141,7 +1156,7 @@ scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
 
 // ── Frame extraction ────────────────────────────────────────────
 const isMobile = window.innerWidth < 768;
-const FRAMES   = isMobile ? 60 : 90;   // menos frames no mobile = menos memória
+const FRAMES   = 90;
 const frames   = [];
 let   ready    = false;
 let   lastIdx  = -1;
@@ -1149,6 +1164,17 @@ let   lastIdx  = -1;
 const ldLine = document.getElementById('ld-line-el');
 const ldPct  = document.getElementById('loading-pct');
 const ldScr  = document.getElementById('loading-screen');
+
+// ── Mobile: usa imagem de fundo CSS, pula extração de vídeo ─────
+if(isMobile){
+  ldLine.style.setProperty('--w','100%');
+  ldPct.textContent = '100%';
+  ready = true;
+  setTimeout(()=>{
+    ldScr.classList.add('hidden');
+    setTimeout(()=> ldScr.style.display='none', 750);
+  }, 400);
+}
 
 const video = document.createElement('video');
 video.src='video.mp4'; video.muted=true; video.playsInline=true;
@@ -1168,6 +1194,7 @@ function waitSeeked(vid, timeout=3000){
 }
 
 video.addEventListener('loadedmetadata', async () => {
+  if(isMobile) return; // mobile usa imagem estática
   // Pequena pausa: alguns navegadores mobile reportam 0 antes de estar pronto
   await new Promise(r => setTimeout(r, 150));
 
@@ -1254,7 +1281,7 @@ window.addEventListener('scroll', ()=>{
   if(!ready) return;
   const trackMax = TRACK_VH * innerHeight;
   const frac     = Math.min(scrollY / trackMax, 1);
-  showFrame(Math.round(frac * (FRAMES-1)));
+  if(!isMobile) showFrame(Math.round(frac * (FRAMES-1)));
 
   const pageMax = document.documentElement.scrollHeight - innerHeight;
   prog.style.width = (scrollY/pageMax*100)+'%';
