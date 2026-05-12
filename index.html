@@ -118,10 +118,14 @@
   #hero-fixed {
     position: sticky; top:0;
     height: 100vh;
-    height: 100svh; /* mobile: exclui barra do navegador */
+    height: 100svh;
     overflow: hidden; background: var(--ink);
   }
   #three-canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  @media(max-width:768px){
+    .hero-track { height:350vh; height:350svh; }
+  }
 
   .hero-vignette-l {
     position:absolute; inset:0; pointer-events:none; z-index:2;
@@ -157,7 +161,10 @@
     text-decoration:none; transition:color .25s;
   }
   .nav-links a:hover { color:var(--gold); }
-  @media(max-width:640px){ .nav-links{display:none;} }
+  @media(max-width:640px){
+    .nav-links { display:none; }
+    nav { padding: 20px 5vw; }
+  }
 
   /* STATUS BADGE */
   .nav-status {
@@ -178,7 +185,9 @@
     0%,100%{ box-shadow:0 0 0 0 rgba(34,197,94,.6); }
     50%    { box-shadow:0 0 0 5px rgba(34,197,94,.0); }
   }
-  @media(max-width:640px){ .nav-status{ padding:4px 10px; font-size:.6rem; } }
+  @media(max-width:640px){
+    .nav-status{ padding:4px 10px; font-size:.6rem; letter-spacing:.8px; }
+  }
 
   /* HERO CONTENT */
   .hero-content {
@@ -225,6 +234,24 @@
     pointer-events:all;
     opacity:0; transform:translateY(16px);
     animation: fadeUp .8s .9s forwards;
+  }
+
+  /* ── HERO MOBILE ───────────────────────────────────────────────── */
+  @media(max-width:640px){
+    .hero-content {
+      justify-content: flex-end;
+      padding: 0 6vw 110px;
+    }
+    #titleGroup { max-width: 100%; }
+    .hero-eyebrow { font-size:.62rem; letter-spacing:3px; margin-bottom:14px; }
+    .hero-eyebrow::before, .hero-eyebrow::after { width:20px; }
+    .hero-title { font-size: clamp(2.8rem, 11vw, 4rem); line-height:1.08; margin-bottom:8px; }
+    .hero-subtitle { font-size: clamp(1.2rem, 5vw, 1.6rem); margin-bottom:24px; }
+    .hero-ctas { flex-direction:column; gap:10px; width:100%; }
+    .hero-ctas .btn { width:100%; justify-content:center; padding:14px 20px; }
+    .hero-social { bottom:28px; right:5vw; gap:8px; }
+    .hero-social .soc { width:36px; height:36px; }
+    .scroll-cue { display:none; }
   }
 
   /* BUTTONS */
@@ -334,7 +361,8 @@
   .badge-name { font-family:'Cormorant Garamond',serif; font-size:1rem; letter-spacing:2px; color:rgba(255,255,255,.7); text-align:center; }
   @media(max-width:768px){
     .about-strip { grid-template-columns:1fr; }
-    .about-strip-right { min-height:280px; }
+    .about-strip-right { min-height:240px; }
+    .about-strip-left { padding: 56px 6vw; border-right:none; border-bottom:1px solid rgba(255,255,255,.07); }
   }
 
   /* ─── STATS ROW ───────────────────────────────────────────────── */
@@ -353,7 +381,8 @@
     margin-bottom:6px;
   }
   .stat-label { font-size:.72rem; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.35); }
-  @media(max-width:480px){ .stats-row{grid-template-columns:1fr 1fr;} }
+  @media(max-width:480px){ .stats-row{ grid-template-columns:1fr 1fr; padding:36px 5vw; } }
+  @media(max-width:360px){ .stats-row{ grid-template-columns:1fr; } }
 
   /* ─── PRODUCTS ────────────────────────────────────────────────── */
   #products { background:var(--cream); padding:90px 0 80px; }
@@ -463,6 +492,12 @@
   @media(max-width:768px){
     .feature-split { grid-template-columns:1fr; }
     .feature-left { display:none; }
+    .feature-right { padding: 56px 6vw; border-left:none; }
+  }
+  @media(max-width:480px){
+    #products { padding: 60px 0 60px; }
+    .products-header { padding: 0 5vw; margin-bottom:36px; }
+    .swiper-products { padding: 8px 4vw 36px !important; }
   }
 
   /* ─── CTA BAND ────────────────────────────────────────────────── */
@@ -479,6 +514,11 @@
   .cta-band-title em { color:var(--gold); font-style:italic; }
   .cta-band-sub { font-size:.9rem; color:rgba(26,16,8,.5); margin-bottom:40px; }
   .cta-band-btns { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  @media(max-width:480px){
+    .cta-band { padding: 60px 6vw; }
+    .cta-band-btns { flex-direction:column; align-items:stretch; }
+    .cta-band-btns .btn { justify-content:center; width:100%; }
+  }
   .btn-gold-dark { background:var(--gold); color:#fff; border-radius:2px; }
   .btn-gold-dark:hover { background:#9a7442; transform:translateY(-2px); box-shadow:0 8px 24px rgba(176,136,80,.3); }
   .btn-ink { background:var(--ink); color:#fff; border-radius:2px; }
@@ -564,6 +604,11 @@
   }
   .gallery-cta { text-align:center; margin-top:48px; }
   .gallery-cta p { font-size:.85rem; color:rgba(255,255,255,.35); margin-bottom:18px; }
+  @media(max-width:640px){
+    .gallery-section { padding: 60px 4vw 56px; }
+    .gallery-grid { columns: 2; gap:8px; }
+    .gallery-item { margin-bottom:8px; }
+  }
 
   /* ─── ANIMATIONS ──────────────────────────────────────────────── */
   @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
@@ -1202,7 +1247,8 @@ const heroContent = document.getElementById('heroContent');
 const titleGroup  = document.getElementById('titleGroup');
 const scrollCue   = document.getElementById('scrollCue');
 const prog        = document.getElementById('prog');
-const TRACK_VH    = 5;
+// Mobile: track menor (3x a tela) alinhado ao CSS hero-track:350svh
+const TRACK_VH    = isMobile ? 3 : 5;
 
 window.addEventListener('scroll', ()=>{
   if(!ready) return;
@@ -1213,24 +1259,34 @@ window.addEventListener('scroll', ()=>{
   const pageMax = document.documentElement.scrollHeight - innerHeight;
   prog.style.width = (scrollY/pageMax*100)+'%';
 
-  // Parallax reduzido no mobile para não deslocar o título para fora
-  const px = isMobile ? 0 : scrollY*.018;
-  const py = isMobile ? scrollY*.06 : scrollY*.11;
-  titleGroup.style.transform = `translate(${px}px,${-py}px)`;
+  // No mobile: sem parallax horizontal, vertical mínimo para não sair da tela
+  if(!isMobile){
+    const px = scrollY*.018;
+    const py = scrollY*.11;
+    titleGroup.style.transform = `translate(${px}px,${-py}px)`;
+  } else {
+    // Apenas fade, sem deslocamento de posição
+    titleGroup.style.transform = 'none';
+  }
 
-  const fadeStart = trackMax*.52;
+  const fadeStart = trackMax*(isMobile ? .45 : .52);
   heroContent.style.opacity = scrollY>fadeStart
-    ? Math.max(0, 1-(scrollY-fadeStart)/(trackMax-fadeStart))
+    ? Math.max(0, 1-(scrollY-fadeStart)/(trackMax*.4))
     : '1';
 
-  scrollCue.style.opacity = scrollY>80 ? '0' : '1';
+  if(scrollCue) scrollCue.style.opacity = scrollY>80 ? '0' : '1';
 }, { passive:true });
 
-window.addEventListener('resize', ()=>{
+function onResize(){
   renderer.setSize(innerWidth, innerHeight);
   mat.uniforms.uRes.value.set(innerWidth, innerHeight);
   if(lastIdx>=0){ tex.needsUpdate=true; renderer.render(scene,camera); }
-});
+}
+window.addEventListener('resize', onResize);
+// Suporte ao visualViewport do mobile (barra de endereço dinâmica)
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', onResize);
+}
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
