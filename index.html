@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Padaria Pão de Prata — Desde 1994</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+  <style>
+  /* ─── RESET & TOKENS ─────────────────────────────────────────── */
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --ink:    #080c15;
+    --cream:  #f4ede0;
+    --cream2: #ede5d4;
+    --blue:   #2d5c99;
+    --gold:   #b08850;
+    --gold2:  #c9a06a;
+    --white:  #ffffff;
+  }
+  html { scroll-behavior: auto; }
+  body { background: var(--ink); color: var(--white); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+  /* ─── LOADING ─────────────────────────────────────────────────── */
+  #loading-screen {
+    position: fixed; inset: 0; z-index: 999;
+    background: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px;
+    transition: opacity .7s ease;
+  }
+  #loading-screen.hidden { opacity:0; pointer-events:none; }
+  .ld-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.4rem; font-weight: 300;
+    color: var(--gold); letter-spacing: 6px; text-transform: uppercase;
+  }
+  .ld-line { width: 200px; height:1px; background: rgba(176,136,80,.25); margin:4px 0; position:relative; }
+  .ld-line::after {
+    content:''; position:absolute; left:0; top:0; height:1px;
+    background: var(--gold); width: var(--w,0%); transition: width .15s linear;
+  }
+  .ld-pct { font-size:.72rem; letter-spacing:3px; color:rgba(255,255,255,.35); }
+
+  /* ─── PROGRESS BAR ────────────────────────────────────────────── */
+  #prog { position:fixed; top:0; left:0; height:2px; width:0; background: linear-gradient(to right, var(--blue), var(--gold)); z-index:200; transition: width .1s; }
+
+  /* ─── HERO / VIDEO ────────────────────────────────────────────── */
+  .hero-track { height:600vh; height:600svh; position:relative; }
+
+  #hero-fixed {
+    position: sticky; top:0;
+    height: 100vh;
+    height: 100svh; /* mobile: exclui barra do navegador */
+    overflow: hidden; background: var(--ink);
+  }
+  #three-canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .hero-vignette-l {
+    position:absolute; inset:0; pointer-events:none; z-index:2;
+    background: linear-gradient(to right,
+      rgba(8,12,21,.82) 0%,
+      rgba(8,12,21,.45) 38%,
+      rgba(8,12,21,.10) 62%,
+      transparent 100%);
+  }
+  .hero-vignette-b {
+    position:absolute; bottom:0; left:0; width:100%; height:35%;
+    background: linear-gradient(to top, rgba(8,12,21,1), transparent);
+    pointer-events:none; z-index:2;
+  }
+
+  /* NAV */
+  nav {
+    position:absolute; top:0; left:0; width:100%; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 28px 5vw;
+  }
+  .nav-logo {
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.25rem; font-weight:400; letter-spacing:3px;
+    text-transform:uppercase; color:var(--white);
+    text-decoration:none;
+  }
+  .nav-logo span { color:var(--gold); }
+  .nav-links { display:flex; gap:28px; }
+  .nav-links a {
+    font-size:.75rem; font-weight:500; letter-spacing:2px;
+    text-transform:uppercase; color:rgba(255,255,255,.65);
+    text-decoration:none; transition:color .25s;
+  }
+  .nav-links a:hover { color:var(--gold); }
+  @media(max-width:640px){ .nav-links{display:none;} }
+
+  /* HERO CONTENT */
+  .hero-content {
+    position:absolute; inset:0; z-index:15;
+    display:flex; flex-direction:column;
+    justify-content:center; padding: 0 5vw;
+    pointer-events:none;
+    transition: opacity .3s;
+  }
+  #titleGroup { will-change: transform; max-width:660px; }
+
+  .hero-eyebrow {
+    display:inline-flex; align-items:center; gap:12px;
+    font-size:.7rem; letter-spacing:4px; text-transform:uppercase;
+    color:var(--gold); margin-bottom:20px;
+    opacity:0; transform:translateY(16px);
+    animation: fadeUp .8s .3s forwards;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content:''; display:block; width:32px; height:1px; background:var(--gold); opacity:.6;
+  }
+
+  .hero-title {
+    font-family:'Cormorant Garamond', serif;
+    font-size: clamp(3.4rem, 7vw, 6.5rem);
+    font-weight:300; line-height:1.05;
+    color:var(--white); margin-bottom:6px;
+    opacity:0; transform:translateY(24px);
+    animation: fadeUp .9s .5s forwards;
+  }
+  .hero-title em { color:var(--gold); font-style:italic; }
+
+  .hero-subtitle {
+    font-family:'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 3vw, 2.6rem);
+    font-weight:300; font-style:italic;
+    color:rgba(255,255,255,.55); margin-bottom:36px;
+    opacity:0; transform:translateY(16px);
+    animation: fadeUp .8s .7s forwards;
+  }
+
+  .hero-ctas {
+    display:flex; flex-wrap:wrap; gap:14px;
+    pointer-events:all;
+    opacity:0; transform:translateY(16px);
+    animation: fadeUp .8s .9s forwards;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display:inline-flex; align-items:center; gap:9px;
+    padding:13px 28px; border-radius:2px;
+    font-size:.8rem; font-weight:500; letter-spacing:1.5px;
+    text-transform:uppercase; text-decoration:none;
+    transition:all .28s ease; white-space:nowrap;
+  }
+  .btn svg { width:17px; height:17px; flex-shrink:0; }
+  .btn-gold { background:var(--gold); color:#fff; }
+  .btn-gold:hover { background:var(--gold2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(176,136,80,.35); }
+  .btn-outline-w { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.35); }
+  .btn-outline-w:hover { border-color:#fff; background:rgba(255,255,255,.08); transform:translateY(-2px); }
+  .btn-green { background:#25d366; color:#fff; border-radius:2px; }
+  .btn-green:hover { background:#1fbb59; transform:translateY(-2px); }
+  .btn-blue { background:var(--blue); color:#fff; }
+  .btn-blue:hover { background:#3a6db5; transform:translateY(-2px); }
+
+  /* HERO SOCIAL ROW */
+  .hero-social {
+    position:absolute; bottom:36px; right:5vw; z-index:20;
+    display:flex; gap:12px; align-items:center;
+    opacity:0; animation:fadeUp .8s 1.2s forwards;
+    pointer-events:all;
+  }
+  .soc {
+    width:40px; height:40px; border-radius:50%;
+    border:1px solid rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center;
+    text-decoration:none; transition:all .25s;
+    background:rgba(255,255,255,.06); backdrop-filter:blur(8px);
+  }
+  .soc svg { width:17px; height:17px; fill:#fff; }
+  .soc:hover { border-color:var(--gold); background:var(--gold); }
+
+  /* SCROLL CUE */
+  .scroll-cue {
+    position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+    z-index:20; display:flex; flex-direction:column; align-items:center; gap:6px;
+    opacity:0; animation:fadeUp .8s 1.5s forwards; transition:opacity .4s;
+  }
+  .scroll-cue span { font-size:.65rem; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.4); }
+  .scroll-line { width:1px; height:36px; background:linear-gradient(to bottom, rgba(255,255,255,.4), transparent); animation:pulse 2s infinite; }
+
+  /* ─── MARQUEE ─────────────────────────────────────────────────── */
+  .marquee-section {
+    background: var(--gold);
+    padding: 14px 0; overflow: hidden;
+    display:flex; align-items:center;
+  }
+  .marquee-track {
+    display:flex; gap:0; white-space:nowrap;
+    animation: marqueeScroll 22s linear infinite;
+  }
+  .marquee-item {
+    display:inline-flex; align-items:center; gap:20px;
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.1rem; font-weight:400; font-style:italic;
+    color: var(--ink); padding: 0 28px;
+  }
+  .marquee-item::after { content:'✦'; font-style:normal; font-size:.7rem; opacity:.6; }
+
+  /* ─── ABOUT STRIP ─────────────────────────────────────────────── */
+  .about-strip {
+    background: var(--ink);
+    display:grid; grid-template-columns:1fr 1fr;
+    min-height:480px;
+  }
+  .about-strip-left {
+    padding: 80px 5vw 80px 6vw;
+    display:flex; flex-direction:column; justify-content:center;
+    border-right:1px solid rgba(255,255,255,.07);
+  }
+  .section-tag {
+    font-size:.7rem; letter-spacing:4px; text-transform:uppercase;
+    color:var(--gold); margin-bottom:18px;
+    display:inline-flex; align-items:center; gap:10px;
+  }
+  .section-tag::before { content:''; display:block; width:28px; height:1px; background:var(--gold); }
+  .section-heading {
+    font-family:'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+    font-weight:300; line-height:1.2; color:var(--white);
+    margin-bottom:20px;
+  }
+  .section-heading em { color:var(--gold); font-style:italic; }
+  .section-body { font-size:.92rem; color:rgba(255,255,255,.5); line-height:1.8; max-width:420px; margin-bottom:32px; }
+  .about-strip-right {
+    position:relative; overflow:hidden; min-height:360px;
+    background: linear-gradient(135deg, #111827 0%, #0d1520 100%);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .about-badge {
+    width:220px; height:220px;
+    border:1px solid rgba(176,136,80,.3); border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px; position:relative;
+  }
+  .about-badge::before {
+    content:''; position:absolute; inset:10px;
+    border:1px solid rgba(176,136,80,.15); border-radius:50%;
+  }
+  .badge-year { font-family:'Cormorant Garamond',serif; font-size:3.2rem; font-weight:300; color:var(--gold); line-height:1; }
+  .badge-since { font-size:.65rem; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,.4); }
+  .badge-name { font-family:'Cormorant Garamond',serif; font-size:1rem; letter-spacing:2px; color:rgba(255,255,255,.7); text-align:center; }
+  @media(max-width:768px){
+    .about-strip { grid-template-columns:1fr; }
+    .about-strip-right { min-height:280px; }
+  }
+
+  /* ─── STATS ROW ───────────────────────────────────────────────── */
+  .stats-row {
+    background:#0c1120; border-top:1px solid rgba(255,255,255,.05);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    display:grid; grid-template-columns:repeat(3,1fr);
+    text-align:center; padding:48px 5vw;
+    gap:20px;
+  }
+  .stat { padding:12px; }
+  .stat-num {
+    font-family:'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 4vw, 3.8rem);
+    font-weight:300; color:var(--gold); line-height:1;
+    margin-bottom:6px;
+  }
+  .stat-label { font-size:.72rem; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,.35); }
+  @media(max-width:480px){ .stats-row{grid-template-columns:1fr 1fr;} }
+
+  /* ─── PRODUCTS ────────────────────────────────────────────────── */
+  #products { background:var(--cream); padding:90px 0 80px; }
+
+  .products-header {
+    text-align:center; padding:0 5vw; margin-bottom:52px;
+  }
+  .products-header .section-tag { color:var(--gold); justify-content:center; }
+  .products-header .section-tag::before { display:none; }
+  .products-heading {
+    font-family:'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    font-weight:300; color:#1a1008; line-height:1.15; margin-bottom:14px;
+  }
+  .products-heading em { color:var(--gold); font-style:italic; }
+  .products-sub { font-size:.92rem; color:rgba(26,16,8,.55); max-width:440px; margin:0 auto; line-height:1.7; }
+
+  .swiper-products { padding: 8px 6vw 48px !important; overflow:visible !important; }
+
+  .product-card {
+    background:#fff;
+    border-radius:4px;
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+    transition:transform .32s ease, box-shadow .32s ease;
+    text-decoration:none; color:inherit;
+    cursor:pointer;
+  }
+  .product-card:hover { transform:translateY(-8px); box-shadow:0 20px 50px rgba(0,0,0,.15); }
+  .product-img-wrap { overflow:hidden; position:relative; aspect-ratio:4/3; }
+  .product-img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s ease; }
+  .product-card:hover .product-img { transform:scale(1.07); }
+  .product-badge {
+    position:absolute; top:14px; left:14px;
+    background:var(--gold); color:#fff;
+    font-size:.65rem; font-weight:600; letter-spacing:1.5px;
+    text-transform:uppercase; padding:4px 10px; border-radius:2px;
+  }
+  .product-body { padding:22px 22px 24px; flex:1; display:flex; flex-direction:column; }
+  .product-cat {
+    font-size:.65rem; letter-spacing:3px; text-transform:uppercase;
+    color:var(--gold); margin-bottom:6px;
+  }
+  .product-name { font-family:'Cormorant Garamond',serif; font-size:1.35rem; font-weight:600; color:#1a1008; margin-bottom:6px; }
+  .product-desc { font-size:.82rem; color:rgba(26,16,8,.5); line-height:1.65; flex:1; margin-bottom:18px; }
+  .product-footer { display:flex; align-items:center; justify-content:space-between; }
+  .product-price { font-family:'Cormorant Garamond',serif; font-size:1.3rem; color:var(--gold); font-weight:600; }
+  .product-btn {
+    background:var(--blue); color:#fff;
+    border:none; padding:9px 18px; border-radius:2px;
+    font-size:.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase;
+    cursor:pointer; transition:background .25s;
+  }
+  .product-btn:hover { background:#3a6db5; }
+
+  /* swiper nav */
+  .carousel-nav { display:flex; justify-content:center; align-items:center; gap:14px; }
+  .swiper-btn {
+    width:48px; height:48px; border-radius:50%;
+    border:1px solid rgba(26,16,8,.2);
+    background:transparent;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all .25s;
+  }
+  .swiper-btn svg { width:19px; height:19px; stroke:#1a1008; }
+  .swiper-btn:hover { background:var(--gold); border-color:var(--gold); }
+  .swiper-btn:hover svg { stroke:#fff; }
+  .swiper-btn.swiper-button-disabled { opacity:.25; pointer-events:none; }
+  .swiper-pagination-products .swiper-pagination-bullet { background:rgba(26,16,8,.2); }
+  .swiper-pagination-products .swiper-pagination-bullet-active { background:var(--gold); }
+
+  /* ifood CTA */
+  .ifood-cta-wrap { text-align:center; margin-top:52px; padding:0 5vw; }
+  .ifood-cta-wrap p { font-size:.85rem; color:rgba(26,16,8,.45); margin-bottom:18px; letter-spacing:.5px; }
+
+  /* ─── FEATURE SPLIT ───────────────────────────────────────────── */
+  .feature-split {
+    display:grid; grid-template-columns:1fr 1fr;
+    min-height:500px; background:var(--ink);
+  }
+  .feature-left {
+    background: linear-gradient(135deg, #0d1a30 0%, #0a1220 100%);
+    display:flex; align-items:center; justify-content:center;
+    padding:64px 5vw;
+  }
+  .feature-left img {
+    width:100%; max-width:420px; border-radius:2px;
+    object-fit:cover; aspect-ratio:4/5;
+    filter:brightness(.9) contrast(1.05) saturate(.9);
+    box-shadow:0 30px 80px rgba(0,0,0,.5);
+  }
+  .feature-right {
+    padding:80px 6vw 80px 5vw;
+    display:flex; flex-direction:column; justify-content:center;
+    border-left:1px solid rgba(255,255,255,.06);
+  }
+  .feature-quote {
+    font-family:'Cormorant Garamond',serif;
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight:300; font-style:italic;
+    color:rgba(255,255,255,.8); line-height:1.45;
+    border-left:2px solid var(--gold); padding-left:24px;
+    margin-bottom:28px;
+  }
+  .feature-body { font-size:.9rem; color:rgba(255,255,255,.45); line-height:1.85; margin-bottom:36px; max-width:420px; }
+  @media(max-width:768px){
+    .feature-split { grid-template-columns:1fr; }
+    .feature-left { display:none; }
+  }
+
+  /* ─── CTA BAND ────────────────────────────────────────────────── */
+  .cta-band {
+    background: var(--cream2);
+    padding:80px 5vw; text-align:center;
+  }
+  .cta-band-tag { font-size:.7rem; letter-spacing:4px; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+  .cta-band-title {
+    font-family:'Cormorant Garamond',serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight:300; color:#1a1008; margin-bottom:12px; line-height:1.2;
+  }
+  .cta-band-title em { color:var(--gold); font-style:italic; }
+  .cta-band-sub { font-size:.9rem; color:rgba(26,16,8,.5); margin-bottom:40px; }
+  .cta-band-btns { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; }
+  .btn-gold-dark { background:var(--gold); color:#fff; border-radius:2px; }
+  .btn-gold-dark:hover { background:#9a7442; transform:translateY(-2px); box-shadow:0 8px 24px rgba(176,136,80,.3); }
+  .btn-ink { background:var(--ink); color:#fff; border-radius:2px; }
+  .btn-ink:hover { background:#1a2234; transform:translateY(-2px); }
+
+  /* ─── LOCATIONS ───────────────────────────────────────────────── */
+  .locations { background:var(--ink); padding:80px 5vw; text-align:center; }
+  .locations .section-heading { margin-bottom:10px; }
+  .locations .section-body { max-width:480px; margin:0 auto 40px; }
+
+  /* ─── FOOTER ──────────────────────────────────────────────────── */
+  footer {
+    background:#04070f;
+    border-top:1px solid rgba(255,255,255,.06);
+    padding:56px 6vw 36px;
+  }
+  .footer-grid {
+    display:grid; grid-template-columns:1.4fr 1fr 1fr;
+    gap:40px; margin-bottom:48px;
+  }
+  @media(max-width:768px){ .footer-grid{grid-template-columns:1fr 1fr;} }
+  @media(max-width:480px){ .footer-grid{grid-template-columns:1fr;} }
+  .footer-brand-name {
+    font-family:'Cormorant Garamond',serif;
+    font-size:1.6rem; font-weight:300; letter-spacing:3px;
+    text-transform:uppercase; color:var(--gold); margin-bottom:10px;
+  }
+  .footer-tagline { font-size:.82rem; color:rgba(255,255,255,.35); line-height:1.7; max-width:260px; }
+  .footer-col h4 {
+    font-size:.68rem; letter-spacing:3px; text-transform:uppercase;
+    color:rgba(255,255,255,.3); margin-bottom:18px;
+  }
+  .footer-col a {
+    display:block; font-size:.86rem; color:rgba(255,255,255,.55);
+    text-decoration:none; margin-bottom:10px; transition:color .22s;
+  }
+  .footer-col a:hover { color:var(--gold); }
+  .footer-divider { border:none; border-top:1px solid rgba(255,255,255,.05); margin-bottom:24px; }
+  .footer-bottom { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px; }
+  .footer-copy { font-size:.72rem; color:rgba(255,255,255,.2); }
+  .footer-soc { display:flex; gap:10px; }
+
+  /* ─── ANIMATIONS ──────────────────────────────────────────────── */
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse  { 0%,100%{opacity:.4;} 50%{opacity:1;} }
+  @keyframes marqueeScroll { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+  </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="ld-brand">Pão de Prata</div>
+  <div class="ld-line" id="ld-line-el"></div>
+  <div class="ld-pct" id="loading-pct">0%</div>
+</div>
+
+<div id="prog"></div>
+
+<!-- ══════════════════════════════════════
+     HERO — VIDEO SCROLL
+════════════════════════════════════════ -->
+<div class="hero-track">
+  <div id="hero-fixed">
+    <canvas id="three-canvas"></canvas>
+    <div class="hero-vignette-l"></div>
+    <div class="hero-vignette-b"></div>
+
+    <nav>
+      <a href="#" class="nav-logo">Pão de <span>Prata</span></a>
+      <div class="nav-links">
+        <a href="#products">Cardápio</a>
+        <a href="https://www.instagram.com/paodeprataleme/" target="_blank">Instagram</a>
+        <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z" target="_blank">Localização</a>
+      </div>
+    </nav>
+
+    <div class="hero-content" id="heroContent">
+      <div id="titleGroup">
+        <div class="hero-eyebrow">Leme, São Paulo</div>
+        <h1 class="hero-title">
+          Feito com<br><em>paixão,</em><br>todo dia.
+        </h1>
+        <p class="hero-subtitle">Tradição desde 1994</p>
+        <div class="hero-ctas">
+          <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="btn btn-gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+            Ver cardápio
+          </a>
+          <a href="https://wa.me/551935717140" target="_blank" class="btn btn-outline-w">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-social">
+      <a href="https://www.instagram.com/paodeprataleme/" target="_blank" class="soc" title="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/p/Padaria-P%C3%A3o-de-Prata-100063654184460/" target="_blank" class="soc" title="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+    </div>
+
+    <div class="scroll-cue" id="scrollCue">
+      <span>Rolar</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MARQUEE STRIP
+════════════════════════════════════════ -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <!-- duplicado para loop infinito -->
+    <span class="marquee-item">Padaria Pão de Prata</span>
+    <span class="marquee-item">Desde 1994</span>
+    <span class="marquee-item">Leme, São Paulo</span>
+    <span class="marquee-item">Feito com amor</span>
+    <span class="marquee-item">Do forno para você</span>
+    <span class="marquee-item">Pão Artesanal</span>
+    <span class="marquee-item">Avaliação 4.9 ★</span>
+    <span class="marquee-item">Padaria Pão de Prata</span>
+    <span class="marquee-item">Desde 1994</span>
+    <span class="marquee-item">Leme, São Paulo</span>
+    <span class="marquee-item">Feito com amor</span>
+    <span class="marquee-item">Do forno para você</span>
+    <span class="marquee-item">Pão Artesanal</span>
+    <span class="marquee-item">Avaliação 4.9 ★</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ABOUT STRIP
+════════════════════════════════════════ -->
+<div class="about-strip">
+  <div class="about-strip-left">
+    <div class="section-tag">Nossa história</div>
+    <h2 class="section-heading">Uma padaria com<br><em>alma de família</em></h2>
+    <p class="section-body">
+      Há mais de 30 anos acordamos cedo para que você comece o dia com o melhor.
+      Nosso pão é assado com farinha selecionada, fermentação natural e muito carinho —
+      a receita que passou de geração em geração aqui em Leme.
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-gold">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Nossas unidades
+      </a>
+    </div>
+  </div>
+  <div class="about-strip-right">
+    <div class="about-badge">
+      <div class="badge-since">Fundada em</div>
+      <div class="badge-year">1994</div>
+      <div class="badge-name">Pão de Prata<br>Leme – SP</div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat">
+    <div class="stat-num">30+</div>
+    <div class="stat-label">Anos de história</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">4.9</div>
+    <div class="stat-label">Avaliação no iFood</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">50+</div>
+    <div class="stat-label">Itens no cardápio</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     PRODUCTS CAROUSEL
+════════════════════════════════════════ -->
+<section id="products">
+  <div class="products-header">
+    <div class="section-tag">Nossos favoritos</div>
+    <h2 class="products-heading">Saídos do forno,<br><em>direto para você</em></h2>
+    <p class="products-sub">Clique em qualquer produto e peça agora pelo iFood.</p>
+  </div>
+
+  <div class="swiper swiper-products">
+    <div class="swiper-wrapper">
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=600&q=80" alt="Pão Francês" loading="lazy">
+            <div class="product-badge">Mais pedido</div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Panificação</div>
+            <div class="product-name">Pão Francês</div>
+            <div class="product-desc">Crocante por fora, macio por dentro. Assado toda manhã, fresquinho e irresistível.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 0,79</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&q=80" alt="Pão de Queijo" loading="lazy">
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Mineiro</div>
+            <div class="product-name">Pão de Queijo</div>
+            <div class="product-desc">Feito com polvilho e queijo mineiro selecionado. Quentinho e derretendo por dentro.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 4,50</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1484723091739-30990ff27f39?w=600&q=80" alt="Croissant" loading="lazy">
+            <div class="product-badge">Destaque</div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Folhado</div>
+            <div class="product-name">Croissant de Presunto e Queijo</div>
+            <div class="product-desc">Massa folhada amanteigada, recheio generoso. Perfeito para o café da manhã.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 8,90</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80" alt="Bolo de Chocolate" loading="lazy">
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Confeitaria</div>
+            <div class="product-name">Bolo de Chocolate</div>
+            <div class="product-desc">Bolo úmido com ganache de chocolate. Disponível em fatia ou inteiro sob encomenda.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 9,90</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=600&q=80" alt="Coxinha" loading="lazy">
+            <div class="product-badge">Novidade</div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Salgado</div>
+            <div class="product-name">Coxinha de Frango</div>
+            <div class="product-desc">Recheio cremoso de frango com catupiry, empanada e frita na hora. Crocante e saborosa.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 6,50</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1495214783159-3503fd1b572d?w=600&q=80" alt="Combo Café" loading="lazy">
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Combo</div>
+            <div class="product-name">Combo Café da Manhã</div>
+            <div class="product-desc">Café com leite + pão francês + manteiga + suco natural. A energia certa para o dia.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 18,90</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80" alt="Pão Integral" loading="lazy">
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Integral</div>
+            <div class="product-name">Pão Integral Artesanal</div>
+            <div class="product-desc">Com farinha integral, sementes de girassol e linhaça. Saudável, nutritivo e saboroso.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 12,90</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="swiper-slide">
+        <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
+          <div class="product-img-wrap">
+            <img class="product-img" src="https://images.unsplash.com/photo-1586985289906-406988974504?w=600&q=80" alt="Esfiha" loading="lazy">
+            <div class="product-badge">Favorito</div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Salgado</div>
+            <div class="product-name">Esfiha de Carne</div>
+            <div class="product-desc">Massa fina, recheio temperado de carne moída. Assada na hora, quente e suculenta.</div>
+            <div class="product-footer">
+              <span class="product-price">R$ 5,50</span>
+              <button class="product-btn">Pedir</button>
+            </div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+    <div class="swiper-pagination swiper-pagination-products" style="position:relative;margin-top:0;bottom:0;"></div>
+  </div>
+
+  <div style="display:flex;justify-content:center;align-items:center;gap:14px;margin-top:6px;" class="carousel-nav">
+    <button class="swiper-btn" id="prevBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="swiper-btn" id="nextBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <div class="ifood-cta-wrap">
+    <p>Mais de 50 itens disponíveis — entrega em Leme</p>
+    <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="btn btn-gold-dark" style="font-size:.82rem;padding:14px 36px;letter-spacing:1.5px;border-radius:2px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      Ver cardápio completo no iFood
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FEATURE SPLIT
+════════════════════════════════════════ -->
+<div class="feature-split">
+  <div class="feature-left">
+    <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=800&q=85" alt="Padaria artesanal">
+  </div>
+  <div class="feature-right">
+    <div class="section-tag" style="color:var(--gold);margin-bottom:20px;">O que nos diferencia</div>
+    <blockquote class="feature-quote">
+      "Acordamos antes do sol nascer para que o seu café da manhã seja perfeito."
+    </blockquote>
+    <p class="feature-body">
+      Na Pão de Prata, cada pão é assado com farinha selecionada e receitas que carregam décadas de tradição.
+      Nossas massas descansam no tempo certo, nossos fornos aquecidos na hora certa — o resultado é aquele
+      sabor que você reconhece desde a primeira mordida.
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="https://wa.me/551935717140" target="_blank" class="btn btn-green" style="border-radius:2px;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;padding:13px 26px;">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Nos chame no WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CTA BAND
+════════════════════════════════════════ -->
+<div class="cta-band">
+  <div class="cta-band-tag">Peça agora</div>
+  <h2 class="cta-band-title">Com fome? A gente<br><em>resolve.</em></h2>
+  <p class="cta-band-sub">Entrega rápida em Leme via iFood. Pedido mínimo R$ 10,00.</p>
+  <div class="cta-band-btns">
+    <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="btn btn-gold-dark" style="text-decoration:none;display:inline-flex;align-items:center;gap:9px;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;padding:14px 32px;border-radius:2px;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+      Pedir no iFood
+    </a>
+    <a href="https://wa.me/551935717140" target="_blank" class="btn btn-ink" style="text-decoration:none;display:inline-flex;align-items:center;gap:9px;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;padding:14px 32px;border-radius:2px;">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Chamar no WhatsApp
+    </a>
+    <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-ink" style="text-decoration:none;display:inline-flex;align-items:center;gap:9px;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;padding:14px 32px;border-radius:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Ver unidades
+    </a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Pão de Prata</div>
+      <p class="footer-tagline">Tradição, sabor e carinho em cada produto. Servindo Leme com orgulho desde 1994.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Acesse</h4>
+      <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank">Cardápio iFood</a>
+      <a href="https://wa.me/551935717140" target="_blank">WhatsApp</a>
+      <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z" target="_blank">Nossas unidades</a>
+    </div>
+    <div class="footer-col">
+      <h4>Redes sociais</h4>
+      <a href="https://www.instagram.com/paodeprataleme/" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/p/Padaria-P%C3%A3o-de-Prata-100063654184460/" target="_blank">Facebook</a>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Padaria Pão de Prata · Leme – SP</span>
+    <div class="footer-soc">
+      <a href="https://www.instagram.com/paodeprataleme/" target="_blank" class="soc" title="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/p/Padaria-P%C3%A3o-de-Prata-100063654184460/" target="_blank" class="soc" title="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.514c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+
+// ── Three.js ────────────────────────────────────────────────────
+const canvas   = document.getElementById('three-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+
+const dispCanvas = document.createElement('canvas');
+const dispCtx    = dispCanvas.getContext('2d');
+dispCanvas.width = 1280; dispCanvas.height = 720;
+
+const tex = new THREE.CanvasTexture(dispCanvas);
+tex.minFilter = tex.magFilter = THREE.LinearFilter;
+
+const mat = new THREE.ShaderMaterial({
+  uniforms:{
+    uTex:  { value:tex },
+    uRes:  { value:new THREE.Vector2(innerWidth, innerHeight) },
+    uVRes: { value:new THREE.Vector2(1280,720) }
+  },
+  vertexShader:  `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.); }`,
+  fragmentShader:`
+    uniform sampler2D uTex;
+    uniform vec2 uRes,uVRes;
+    varying vec2 vUv;
+    void main(){
+      float rs=uRes.x/uRes.y, ri=uVRes.x/uVRes.y;
+      vec2 uv=rs<ri
+        ? vec2(vUv.x*rs/ri+(1.-rs/ri)*.5, vUv.y)
+        : vec2(vUv.x, vUv.y*ri/rs+(1.-ri/rs)*.5);
+      gl_FragColor=texture2D(uTex,uv);
+    }`
+});
+scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
+
+// ── Frame extraction ────────────────────────────────────────────
+const isMobile = window.innerWidth < 768;
+const FRAMES   = isMobile ? 60 : 90;   // menos frames no mobile = menos memória
+const frames   = [];
+let   ready    = false;
+let   lastIdx  = -1;
+
+const ldLine = document.getElementById('ld-line-el');
+const ldPct  = document.getElementById('loading-pct');
+const ldScr  = document.getElementById('loading-screen');
+
+const video = document.createElement('video');
+video.src='video.mp4'; video.muted=true; video.playsInline=true;
+video.setAttribute('playsinline','');
+video.setAttribute('webkit-playsinline','');
+video.preload='auto'; video.crossOrigin='anonymous'; video.load();
+
+const extCanvas = document.createElement('canvas');
+const extCtx    = extCanvas.getContext('2d');
+
+// Aguarda seeked com timeout de segurança (evita travar no iOS)
+function waitSeeked(vid, timeout=3000){
+  return new Promise(resolve => {
+    const t = setTimeout(resolve, timeout);
+    vid.addEventListener('seeked', () => { clearTimeout(t); resolve(); }, { once:true });
+  });
+}
+
+video.addEventListener('loadedmetadata', async () => {
+  // Pequena pausa: alguns navegadores mobile reportam 0 antes de estar pronto
+  await new Promise(r => setTimeout(r, 150));
+
+  const dur = video.duration;
+  const vw  = video.videoWidth  || 1920;
+  const vh  = video.videoHeight || 1080;
+
+  extCanvas.width  = vw;
+  extCanvas.height = vh;
+
+  // Resolução menor no mobile poupa memória GPU e RAM
+  const maxW = isMobile ? 720 : 1280;
+  const maxH = isMobile ? 405 : 720;
+  dispCanvas.width  = Math.min(vw, maxW);
+  dispCanvas.height = Math.min(vh, maxH);
+  mat.uniforms.uVRes.value.set(dispCanvas.width, dispCanvas.height);
+
+  for(let i=0; i<FRAMES; i++){
+    video.currentTime = (i/(FRAMES-1)) * dur;
+    await waitSeeked(video);
+
+    if(vw > 0 && vh > 0) extCtx.drawImage(video, 0, 0);
+
+    // iOS Safari não suporta opções de resize no createImageBitmap
+    // → tenta com resize (Chrome/Firefox), cai para sem opções (Safari)
+    let bmp = null;
+    try {
+      bmp = await createImageBitmap(extCtx.canvas,
+        { resizeWidth:dispCanvas.width, resizeHeight:dispCanvas.height, resizeQuality:'medium' });
+    } catch {
+      try { bmp = await createImageBitmap(extCtx.canvas); }
+      catch { /* fallback: será desenhado direto */ }
+    }
+    frames[i] = bmp;
+
+    const pct = Math.round((i+1)/FRAMES*100);
+    ldLine.style.setProperty('--w', pct+'%');
+    ldPct.textContent = pct+'%';
+  }
+
+  ready = true;
+  ldScr.classList.add('hidden');
+  setTimeout(()=> ldScr.style.display='none', 750);
+  showFrame(0);
+  renderer.render(scene, camera);
+});
+
+function showFrame(i){
+  i = Math.max(0, Math.min(i, FRAMES-1));
+  if(i===lastIdx) return;
+  const frame = frames[i];
+  if(!frame) return;
+  lastIdx = i;
+
+  if(frame instanceof ImageBitmap){
+    dispCtx.drawImage(frame, 0, 0, dispCanvas.width, dispCanvas.height);
+  } else {
+    // fallback raro: extrai do vídeo novamente via canvas temporário
+    extCtx.drawImage(video, 0, 0);
+    dispCtx.drawImage(extCanvas, 0, 0, dispCanvas.width, dispCanvas.height);
+  }
+  tex.needsUpdate = true;
+  renderer.render(scene, camera);
+}
+
+// Redesenha ao girar a tela no mobile
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    renderer.setSize(innerWidth, innerHeight);
+    mat.uniforms.uRes.value.set(innerWidth, innerHeight);
+    if(lastIdx >= 0){ tex.needsUpdate=true; renderer.render(scene,camera); }
+  }, 300);
+});
+
+// ── Scroll ──────────────────────────────────────────────────────
+const heroContent = document.getElementById('heroContent');
+const titleGroup  = document.getElementById('titleGroup');
+const scrollCue   = document.getElementById('scrollCue');
+const prog        = document.getElementById('prog');
+const TRACK_VH    = 5;
+
+window.addEventListener('scroll', ()=>{
+  if(!ready) return;
+  const trackMax = TRACK_VH * innerHeight;
+  const frac     = Math.min(scrollY / trackMax, 1);
+  showFrame(Math.round(frac * (FRAMES-1)));
+
+  const pageMax = document.documentElement.scrollHeight - innerHeight;
+  prog.style.width = (scrollY/pageMax*100)+'%';
+
+  // Parallax reduzido no mobile para não deslocar o título para fora
+  const px = isMobile ? 0 : scrollY*.018;
+  const py = isMobile ? scrollY*.06 : scrollY*.11;
+  titleGroup.style.transform = `translate(${px}px,${-py}px)`;
+
+  const fadeStart = trackMax*.52;
+  heroContent.style.opacity = scrollY>fadeStart
+    ? Math.max(0, 1-(scrollY-fadeStart)/(trackMax-fadeStart))
+    : '1';
+
+  scrollCue.style.opacity = scrollY>80 ? '0' : '1';
+}, { passive:true });
+
+window.addEventListener('resize', ()=>{
+  renderer.setSize(innerWidth, innerHeight);
+  mat.uniforms.uRes.value.set(innerWidth, innerHeight);
+  if(lastIdx>=0){ tex.needsUpdate=true; renderer.render(scene,camera); }
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+const sw = new Swiper('.swiper-products', {
+  slidesPerView: 1.1, spaceBetween: 20, grabCursor: true,
+  pagination: { el: '.swiper-pagination-products', clickable: true },
+  navigation: { prevEl: '#prevBtn', nextEl: '#nextBtn' },
+  on: {
+    init(){ document.getElementById('prevBtn').classList.add('swiper-button-disabled'); },
+    slideChange(){
+      document.getElementById('prevBtn').classList.toggle('swiper-button-disabled', this.isBeginning);
+      document.getElementById('nextBtn').classList.toggle('swiper-button-disabled', this.isEnd);
+    }
+  },
+  breakpoints: {
+    540:  { slidesPerView: 1.6 },
+    768:  { slidesPerView: 2.3 },
+    1024: { slidesPerView: 3.1 },
+    1280: { slidesPerView: 3.8 }
+  }
+});
+</script>
+</body>
+</html>
