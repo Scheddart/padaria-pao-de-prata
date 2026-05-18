@@ -94,7 +94,7 @@
     background: var(--ink);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 20px;
-    transition: opacity .7s ease;
+    transition: opacity .35s ease;
   }
   #loading-screen.hidden { opacity:0; pointer-events:none; }
   .ld-brand {
@@ -1348,9 +1348,9 @@ const ldScr  = document.getElementById('loading-screen');
 // ── Frame configuration ──────────────────────────────────────────
 // Mobile: 9:16 portrait (frames/), Desktop: 16:9 landscape (frames-desktop/)
 const FRAMES_DIR = isMobile ? 'frames'          : 'frames-desktop';
-const TOTAL_FR   = isMobile ? 117               : 121;
-const CANVAS_W   = isMobile ? 540               : 1280;
-const CANVAS_H   = isMobile ? 958               : 720;
+const TOTAL_FR   = isMobile ? 117               : 120;
+const CANVAS_W   = isMobile ? 540               : 1916;
+const CANVAS_H   = isMobile ? 958               : 1080;
 
 const fImgs      = new Array(TOTAL_FR);
 let   fLoaded    = 0;
@@ -1374,34 +1374,24 @@ function initFrames(){
     img.onload = ()=>{
       fImgs[i] = img;
       fLoaded++;
-      // Mostra frame 0 IMEDIATAMENTE quando ele carregar (sem esperar os outros)
+      // Mostra frame 0 IMEDIATAMENTE quando ele carregar e libera o site
       if(i === 0){
         dispCtx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
         tex.needsUpdate = true;
         renderer.render(scene, camera);
-      }
-      const pct = Math.round(fLoaded / TOTAL_FR * 100);
-      ldLine.style.setProperty('--w', pct + '%');
-      ldPct.textContent = pct + '%';
-      if(fLoaded === TOTAL_FR){
-        ready = true;
-        ldScr.classList.add('hidden');
-        setTimeout(()=>ldScr.style.display='none', 750);
+        if(!ready){
+          ready = true;
+          ldScr.classList.add('hidden');
+          setTimeout(()=>ldScr.style.display='none', 400);
+        }
       }
     };
-    img.onerror = ()=>{
-      fLoaded++;
-      if(fLoaded === TOTAL_FR && !ready){
-        ready = true;
-        ldScr.classList.add('hidden');
-        setTimeout(()=>ldScr.style.display='none', 750);
-      }
-    };
+    img.onerror = ()=>{ fLoaded++; };
   }
-  // fallback: libera após 15 s
+  // fallback: libera após 3 s mesmo se nada carregar
   setTimeout(()=>{
-    if(!ready){ ready=true; ldScr.classList.add('hidden'); setTimeout(()=>ldScr.style.display='none',750); }
-  }, 15000);
+    if(!ready){ ready=true; ldScr.classList.add('hidden'); setTimeout(()=>ldScr.style.display='none',400); }
+  }, 3000);
 }
 
 function showFrame(frac){
