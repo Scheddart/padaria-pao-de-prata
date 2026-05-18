@@ -1323,12 +1323,12 @@ const mat = new THREE.ShaderMaterial({
     uniform vec2 uRes,uVRes;
     varying vec2 vUv;
     void main(){
-      // COVER: preenche a tela toda, corta o excesso (sem barras pretas)
+      // COVER: preenche a tela toda, corta o excesso (sem barras pretas nem esticamento)
       float rs=uRes.x/uRes.y, ri=uVRes.x/uVRes.y;
       vec2 uv=rs<ri
-        ? vec2((vUv.x-.5)*(ri/rs)+.5, vUv.y)
-        : vec2(vUv.x, (vUv.y-.5)*(rs/ri)+.5);
-      gl_FragColor=texture2D(uTex, clamp(uv,0.,1.));
+        ? vec2((vUv.x-.5)*(rs/ri)+.5, vUv.y)
+        : vec2(vUv.x, (vUv.y-.5)*(ri/rs)+.5);
+      gl_FragColor=texture2D(uTex, uv);
     }`
 });
 scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
@@ -1449,13 +1449,20 @@ function onScroll(){
   const pageMax = document.documentElement.scrollHeight - innerHeight;
   prog.style.width = (scrollY/pageMax*100)+'%';
 
+  // Título: sobe e desaparece suavemente conforme o usuário rola
+  const titleFadeRange = _heroH * 0.75;                       // fade ao longo de ~75% da viewport
+  const titleProgress  = Math.min(scrollY / titleFadeRange, 1);
+  const titleOpacity   = Math.pow(1 - titleProgress, 1.4);    // ease-out suave
   if(!isMobile){
-    titleGroup.style.transform = `translate3d(${scrollY*.018}px,${-scrollY*.11}px,0)`;
+    const riseY = -scrollY * 0.35;                            // sobe mais rápido que antes
+    titleGroup.style.transform = `translate3d(0, ${riseY}px, 0)`;
   } else {
-    titleGroup.style.transform = 'none';
+    const riseY = -scrollY * 0.25;
+    titleGroup.style.transform = `translate3d(0, ${riseY}px, 0)`;
   }
+  titleGroup.style.opacity = titleOpacity;
 
-  // Fade-out do conteúdo hero perto do final
+  // Fade-out do restante do conteúdo hero perto do final
   const fadeStart = trackMax * .7;
   heroContent.style.opacity = scrollY > fadeStart
     ? Math.max(0, 1 - (scrollY - fadeStart) / (trackMax * .3))
