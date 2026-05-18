@@ -113,39 +113,18 @@
   #prog { position:fixed; top:0; left:0; height:2px; width:0; background: linear-gradient(to right, var(--blue), var(--gold)); z-index:200; transition: width .1s; }
 
   /* ─── HERO / VIDEO ────────────────────────────────────────────── */
-  .hero-track { height:800vh; height:800lvh; position:relative; }
+  .hero-track { height:800vh; height:800svh; position:relative; }
 
   #hero-fixed {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
+    position: sticky; top:0;
     height: 100vh;
-    height: 100lvh;                 /* altura estável independente da UI do browser */
-    z-index: 5;
+    height: 100svh;
     overflow: hidden;
     background: linear-gradient(135deg, #04070f 0%, #0b1628 45%, #060d1a 100%);
-    will-change: transform;
-    contain: layout paint;          /* hint de performance */
   }
   #three-canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
 
-  /* ── HERO MOBILE: scroll por frames ──── */
-  @media(max-width:768px){
-    .hero-track  { height: 300svh; position: relative; }
-    /* position:fixed + JS translate (mais robusto que sticky no iOS) */
-    #hero-fixed  {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100vh;
-      height: 100lvh;             /* altura estável (large viewport) */
-      z-index: 5;
-      will-change: transform;
-    }
-    .hero-vignette-b { height: 40%; }
-    .hero-vignette-l { background: rgba(8,12,21,.45); }
-    .scroll-cue { display: none !important; }   /* remove "Rolar" */
-  }
+  /* desktop.html — versão exclusiva desktop, sem overrides mobile */
 
   .hero-vignette-l {
     position:absolute; inset:0; pointer-events:none; z-index:2;
@@ -311,9 +290,8 @@
   .soc svg { width:17px; height:17px; fill:#fff; }
   .soc:hover { border-color:var(--gold); background:var(--gold); }
 
-  /* SCROLL CUE — escondido em todas plataformas */
-  .scroll-cue { display: none !important; }
-  ._ignored_scroll {
+  /* SCROLL CUE */
+  .scroll-cue {
     position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
     z-index:20; display:flex; flex-direction:column; align-items:center; gap:6px;
     opacity:0; animation:fadeUp .8s 1.5s forwards; transition:opacity .4s;
@@ -588,130 +566,6 @@
   .footer-copy { font-size:.72rem; color:rgba(255,255,255,.2); }
   .footer-soc { display:flex; gap:10px; }
 
-  /* ─── UNIDADES (mapa circular clicável) ──────────────────────── */
-  .units-section {
-    background: var(--ink);
-    padding: 100px 6vw;
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 80px;
-    align-items: center;
-    max-width: 1280px;
-    margin: 0 auto;
-  }
-  .units-text .section-tag { color: var(--gold); margin-bottom: 18px; }
-  .units-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.6rem, 5vw, 4.4rem);
-    font-weight: 300;
-    line-height: 1.05;
-    color: var(--white);
-    margin-bottom: 22px;
-    letter-spacing: -0.5px;
-  }
-  .units-heading em { color: var(--gold); font-style: italic; font-weight: 300; }
-  .units-body {
-    color: rgba(255,255,255,.55);
-    font-size: .95rem;
-    line-height: 1.7;
-    margin-bottom: 28px;
-    max-width: 460px;
-  }
-  .units-list { display:flex; flex-direction:column; gap:10px; }
-  .units-list-item {
-    display:flex; align-items:center; gap:12px;
-    font-size:.85rem; color:rgba(255,255,255,.7);
-    letter-spacing:.5px;
-  }
-  .units-dot {
-    width:6px; height:6px; border-radius:50%;
-    background:var(--gold); flex-shrink:0;
-  }
-
-  /* Mapa circular */
-  .units-map {
-    position: relative;
-    display: block;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    max-width: 480px;
-    margin: 0 auto;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-    text-decoration: none;
-    box-shadow: 0 30px 80px rgba(0,0,0,.5),
-                0 0 0 8px rgba(255,255,255,.04),
-                inset 0 0 0 1px rgba(255,255,255,.08);
-    transition: transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease;
-  }
-  .units-map:hover {
-    transform: scale(1.03);
-    box-shadow: 0 40px 100px rgba(176,136,80,.3),
-                0 0 0 8px rgba(176,136,80,.15),
-                inset 0 0 0 1px rgba(176,136,80,.4);
-  }
-  .units-map-img {
-    position:absolute; inset:0;
-    border-radius:50%;
-    overflow:hidden;
-  }
-  .units-map-img img {
-    width:100%; height:100%;
-    object-fit:cover;
-    filter: saturate(.85) contrast(1.05);
-    transition: transform .8s ease, filter .5s ease;
-  }
-  .units-map:hover .units-map-img img {
-    transform: scale(1.08);
-    filter: saturate(1) contrast(1.1);
-  }
-  .units-pin {
-    position:absolute;
-    top: 42%; left: 50%;
-    transform: translate(-50%, -100%);
-    z-index: 3;
-    filter: drop-shadow(0 8px 16px rgba(0,0,0,.4));
-    animation: pinFloat 2.5s ease-in-out infinite;
-  }
-  @keyframes pinFloat {
-    0%,100% { transform: translate(-50%, -100%); }
-    50%     { transform: translate(-50%, calc(-100% - 8px)); }
-  }
-  .units-map-hover {
-    position:absolute;
-    bottom: 12%;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: rgba(8,12,21,.85);
-    backdrop-filter: blur(10px);
-    color: var(--gold);
-    padding: 12px 22px;
-    border-radius: 100px;
-    font-size: .72rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid rgba(176,136,80,.3);
-    opacity: 0;
-    transition: opacity .4s ease, transform .4s cubic-bezier(.2,.8,.2,1);
-    pointer-events: none;
-  }
-  .units-map:hover .units-map-hover {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  @media(max-width:900px){
-    .units-section { grid-template-columns: 1fr; gap: 48px; padding: 70px 6vw; text-align:center; }
-    .units-body { margin: 0 auto 28px; }
-    .units-list { align-items:center; }
-    .units-map { max-width: 340px; }
-  }
-
   /* ─── GALLERY ─────────────────────────────────────────────────── */
   .gallery-section {
     background: var(--ink); padding: 90px 5vw 80px;
@@ -793,7 +647,7 @@
         <a href="#products">Cardápio</a>
         <a href="#gallery">Galeria</a>
         <a href="https://www.instagram.com/paodeprataleme/" target="_blank">Instagram</a>
-        <a href="#unidades">Localização</a>
+        <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z" target="_blank">Localização</a>
       </div>
       <div class="nav-status">
         <span class="status-dot"></span>
@@ -938,7 +792,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="produtos/pao-de-queijo.webp" alt="Pão de Queijo" loading="lazy">
+            <img class="product-img" src="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/food-freshly-baked-doughnuts-table-300x300.jpg" alt="Pão de Queijo" loading="lazy">
           </div>
           <div class="product-body">
             <div class="product-cat">Mineiro</div>
@@ -955,7 +809,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="produtos/croissant-presunto-e-queijo.webp" alt="Croissant de Presunto e Queijo" loading="lazy">
+            <img class="product-img" src="https://images.unsplash.com/photo-1484723091739-30990ff27f39?w=600&q=80" alt="Croissant" loading="lazy">
             <div class="product-badge">Destaque</div>
           </div>
           <div class="product-body">
@@ -990,7 +844,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="produtos/coxinha.webp" alt="Coxinha de Frango" loading="lazy">
+            <img class="product-img" src="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/5cbfbedf0918d65f14b28ea8a73168cb-300x300.jpg" alt="Coxinha" loading="lazy">
             <div class="product-badge">Novidade</div>
           </div>
           <div class="product-body">
@@ -1008,7 +862,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="produtos/combo-cafe-da-manha.webp" alt="Combo Café da Manhã" loading="lazy">
+            <img class="product-img" src="https://images.unsplash.com/photo-1495214783159-3503fd1b572d?w=600&q=80" alt="Combo Café" loading="lazy">
           </div>
           <div class="product-body">
             <div class="product-cat">Combo</div>
@@ -1042,7 +896,7 @@
       <div class="swiper-slide">
         <a href="https://www.ifood.com.br/delivery/leme-sp/padaria-pao-de-prata-jardim-sao-jose/6d386b60-b66c-44e1-926a-a879f4b1ba6c?UTM_Medium=share" target="_blank" class="product-card">
           <div class="product-img-wrap">
-            <img class="product-img" src="produtos/esfiha-de-carne.webp" alt="Esfiha de Carne" loading="lazy">
+            <img class="product-img" src="https://images.unsplash.com/photo-1586985289906-406988974504?w=600&q=80" alt="Esfiha" loading="lazy">
             <div class="product-badge">Favorito</div>
           </div>
           <div class="product-body">
@@ -1121,45 +975,12 @@
       <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       Chamar no WhatsApp
     </a>
+    <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z?entry=ttu&g_ep=EgoyMDI2MDUxMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-ink" style="text-decoration:none;display:inline-flex;align-items:center;gap:9px;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;padding:14px 32px;border-radius:2px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Ver unidades
+    </a>
   </div>
 </div>
-
-<!-- ══════════════════════════════════════
-     UNIDADES — mapa circular clicável
-════════════════════════════════════════ -->
-<section class="units-section" id="unidades">
-  <div class="units-text">
-    <div class="section-tag">Onde nos encontrar</div>
-    <h2 class="units-heading"><em>4 unidades</em><br>em Leme, SP</h2>
-    <p class="units-body">
-      Estamos espalhados por Leme para sempre estarmos pertinho de você.
-      Clique no mapa ao lado para ver todas as nossas unidades no Google&nbsp;Maps —
-      escolha a mais próxima e venha nos visitar.
-    </p>
-    <div class="units-list">
-      <div class="units-list-item"><span class="units-dot"></span>Av. Hermínio Ometto, 1538</div>
-      <div class="units-list-item"><span class="units-dot"></span>Centro de Leme</div>
-      <div class="units-list-item"><span class="units-dot"></span>Jardim São José</div>
-      <div class="units-list-item"><span class="units-dot"></span>+ outras unidades</div>
-    </div>
-  </div>
-
-  <a href="https://www.google.com/maps/search/pao+de+prata/@-22.1874447,-47.3879385,14z" target="_blank" class="units-map" aria-label="Abrir Google Maps com as unidades da Padaria Pão de Prata">
-    <div class="units-map-img">
-      <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=900&q=80&auto=format&fit=crop" alt="Mapa de Leme" loading="lazy">
-    </div>
-    <div class="units-pin">
-      <svg viewBox="0 0 24 32" width="44" height="58" fill="none">
-        <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 20 12 20s12-11 12-20c0-6.6-5.4-12-12-12z" fill="#b08850"/>
-        <circle cx="12" cy="12" r="4.5" fill="#fff"/>
-      </svg>
-    </div>
-    <div class="units-map-hover">
-      <span>Abrir no Maps</span>
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
-    </div>
-  </a>
-</section>
 
 <!-- ══════════════════════════════════════
      GALLERY
@@ -1174,62 +995,62 @@
   <div class="gallery-grid">
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=700&q=80&auto=format&fit=crop" alt="Pão fresquinho da padaria" loading="lazy">
+      <img src="https://padariapaodeprata.com.br/wp-content/uploads/2023/05/20230413_154522-300x300.jpg" alt="Pão Francês Pão de Prata" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Pão Francês</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=80&auto=format&fit=crop" alt="Interior da padaria" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=85" alt="Interior da padaria" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Nossa padaria</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?w=700&q=80&auto=format&fit=crop" alt="Padeiro trabalhando" loading="lazy">
-      <div class="gallery-overlay"><span class="gallery-overlay-label">Tradição</span></div>
+      <img src="https://padariapaodeprata.com.br/wp-content/uploads/2023/10/0-1024x640.png" alt="Padaria Pão de Prata Leme" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Pão de Prata</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=700&q=80&auto=format&fit=crop" alt="Bolo de confeitaria" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=700&q=85" alt="Bolo de confeitaria" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Confeitaria</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=700&q=80&auto=format&fit=crop" alt="Pães artesanais" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=700&q=85" alt="Pães artesanais" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Pães Artesanais</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=700&q=80&auto=format&fit=crop" alt="Xícara de café da manhã" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1590080875039-c7a63e35e38f?w=700&q=85" alt="Café da padaria" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Café da Manhã</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=700&q=80&auto=format&fit=crop" alt="Croissants frescos" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1484723091739-30990ff27f39?w=700&q=85" alt="Croissant" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Croissants</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=700&q=80&auto=format&fit=crop" alt="Ambiente da padaria" loading="lazy">
-      <div class="gallery-overlay"><span class="gallery-overlay-label">Ambiente</span></div>
+      <img src="https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=700&q=85" alt="Padaria artesanal" loading="lazy">
+      <div class="gallery-overlay"><span class="gallery-overlay-label">Tradição</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=700&q=80&auto=format&fit=crop" alt="Sonhos e doces" loading="lazy">
+      <img src="https://padariapaodeprata.com.br/wp-content/uploads/2023/04/food-freshly-baked-doughnuts-table-300x300.jpg" alt="Sonho e doces" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Sonhos & Doces</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1567945716310-4745a6b7844b?w=700&q=80&auto=format&fit=crop" alt="Vitrine da padaria" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1567945716310-4745a6b7844b?w=700&q=85" alt="Vitrine da padaria" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Nossa Vitrine</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1599785209707-a456fc1337bb?w=700&q=80&auto=format&fit=crop" alt="Salgados" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1586985289906-406988974504?w=700&q=85" alt="Salgados" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Salgados</span></div>
     </div>
 
     <div class="gallery-item">
-      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=80&auto=format&fit=crop" alt="Nosso espaço" loading="lazy">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700&q=85" alt="Ambiente Pão de Prata" loading="lazy">
       <div class="gallery-overlay"><span class="gallery-overlay-label">Nosso Espaço</span></div>
     </div>
 
@@ -1291,15 +1112,10 @@ const canvas   = document.getElementById('three-canvas');
 const renderer = new THREE.WebGLRenderer({ canvas, alpha:true, antialias:true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
-// Helpers (visualViewport p/ fallback, mas usamos heroFixed.offsetX como fonte primária)
+// Usa visualViewport para pegar a altura real da tela no mobile
 function getVW(){ return window.visualViewport ? window.visualViewport.width  : innerWidth; }
 function getVH(){ return window.visualViewport ? window.visualViewport.height : innerHeight; }
-
-// Dimensão inicial: usa hero-fixed se já estiver no DOM (script no fim do body)
-const _initHero = document.getElementById('hero-fixed');
-const _initW = (_initHero && _initHero.offsetWidth)  || innerWidth;
-const _initH = (_initHero && _initHero.offsetHeight) || innerHeight;
-renderer.setSize(_initW, _initH);
+renderer.setSize(getVW(), getVH());
 
 const scene  = new THREE.Scene();
 const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
@@ -1314,7 +1130,7 @@ tex.minFilter = tex.magFilter = THREE.LinearFilter;
 const mat = new THREE.ShaderMaterial({
   uniforms:{
     uTex:  { value:tex },
-    uRes:  { value:new THREE.Vector2(_initW, _initH) },
+    uRes:  { value:new THREE.Vector2(getVW(), getVH()) },
     uVRes: { value:new THREE.Vector2(1280,720) }
   },
   vertexShader:  `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.); }`,
@@ -1333,168 +1149,117 @@ const mat = new THREE.ShaderMaterial({
 });
 scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), mat));
 
-// ── Vídeo + lógica de renderização ──────────────────────────────
-const isMobile = window.innerWidth < 768;
-let   ready    = false;
+// ── DESKTOP ONLY — scroll-driven video ──────────────────────────
+let ready       = false;
+let _seekTarget = 0;
+let _seekBusy   = false;
+let _dur        = 0;
 
 const ldLine = document.getElementById('ld-line-el');
 const ldPct  = document.getElementById('loading-pct');
 const ldScr  = document.getElementById('loading-screen');
 
-// Não usamos mais vídeo em nenhuma plataforma — só frames JPG.
-// Mobile: 117 frames 9:16 em frames/
-// Desktop: 121 frames 16:9 em frames-desktop/
+// Renderer ocupa a janela inteira
+renderer.setSize(innerWidth, innerHeight);
+mat.uniforms.uRes.value.set(innerWidth, innerHeight);
 
-// ── Frame configuration ──────────────────────────────────────────
-// Mobile: 9:16 portrait (frames/), Desktop: 16:9 landscape (frames-desktop/)
-const FRAMES_DIR = isMobile ? 'frames'          : 'frames-desktop';
-const TOTAL_FR   = isMobile ? 117               : 121;
-const CANVAS_W   = isMobile ? 540               : 1280;
-const CANVAS_H   = isMobile ? 958               : 720;
+const video = document.createElement('video');
+video.src      = 'video.mp4';
+video.muted    = true;
+video.preload  = 'auto';
+video.setAttribute('playsinline','');
+video.load();
 
-const fImgs      = new Array(TOTAL_FR);
-let   fLoaded    = 0;
-let   fLastIdx   = -1;
-
-function initFrames(){
-  dispCanvas.width  = CANVAS_W;
-  dispCanvas.height = CANVAS_H;
-  mat.uniforms.uVRes.value.set(CANVAS_W, CANVAS_H);
-
-  // Renderer sempre nas dimensões reais do hero-fixed (100lvh — estável)
-  const w = (heroFixedEl && heroFixedEl.offsetWidth)  || innerWidth;
-  const h = (heroFixedEl && heroFixedEl.offsetHeight) || innerHeight;
-  renderer.setSize(w, h);
-  mat.uniforms.uRes.value.set(w, h);
-
-  for(let i = 0; i < TOTAL_FR; i++){
-    const img = new Image();
-    const num = String(i + 1).padStart(3, '0');
-    img.src = `${FRAMES_DIR}/ezgif-frame-${num}.jpg`;
-    img.onload = ()=>{
-      fImgs[i] = img;
-      fLoaded++;
-      // Mostra frame 0 IMEDIATAMENTE quando ele carregar (sem esperar os outros)
-      if(i === 0){
-        dispCtx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
-        tex.needsUpdate = true;
-        renderer.render(scene, camera);
-      }
-      const pct = Math.round(fLoaded / TOTAL_FR * 100);
-      ldLine.style.setProperty('--w', pct + '%');
-      ldPct.textContent = pct + '%';
-      if(fLoaded === TOTAL_FR){
-        ready = true;
-        ldScr.classList.add('hidden');
-        setTimeout(()=>ldScr.style.display='none', 750);
-      }
-    };
-    img.onerror = ()=>{
-      fLoaded++;
-      if(fLoaded === TOTAL_FR && !ready){
-        ready = true;
-        ldScr.classList.add('hidden');
-        setTimeout(()=>ldScr.style.display='none', 750);
-      }
-    };
-  }
-  // fallback: libera após 15 s
-  setTimeout(()=>{
-    if(!ready){ ready=true; ldScr.classList.add('hidden'); setTimeout(()=>ldScr.style.display='none',750); }
-  }, 15000);
-}
-
-function showFrame(frac){
-  const idx = Math.min(Math.round(frac * (TOTAL_FR - 1)), TOTAL_FR - 1);
-  if(idx === fLastIdx) return;
-  fLastIdx = idx;
-  const img = fImgs[idx];
-  if(!img) return;
-  dispCtx.drawImage(img, 0, 0, CANVAS_W, CANVAS_H);
+function _draw(){
+  try { dispCtx.drawImage(video, 0, 0, 1280, 720); } catch{}
   tex.needsUpdate = true;
   renderer.render(scene, camera);
 }
 
-// Refs pro fake sticky
-const heroFixedEl = document.getElementById('hero-fixed');
-const heroTrackEl = document.querySelector('.hero-track');
+function _seek(t){
+  _seekTarget = Math.max(0, Math.min(t, _dur));
+  if(!_seekBusy){
+    _seekBusy = true;
+    video.currentTime = _seekTarget;
+  }
+}
 
-// Inicia preload imediatamente (mobile ou desktop)
-initFrames();
-
-// Redesenha ao girar a tela no mobile
-window.addEventListener('orientationchange', ()=>{
-  setTimeout(()=>{ onResize(); }, 400);
+video.addEventListener('error', ()=>{
+  if(!ready){ ready=true; ldScr.classList.add('hidden'); setTimeout(()=>ldScr.style.display='none',750); }
 });
 
-// ── Scroll ──────────────────────────────────────────────────────
+video.addEventListener('loadedmetadata', ()=>{
+  const dur = video.duration;
+  if(!dur || !isFinite(dur)){ ready=true; ldScr.classList.add('hidden'); setTimeout(()=>ldScr.style.display='none',750); return; }
+  _dur = dur;
+
+  dispCanvas.width  = 1280;
+  dispCanvas.height = 720;
+  mat.uniforms.uVRes.value.set(1280, 720);
+
+  // Cada vez que o seek termina: renderiza e processa next seek se houver
+  video.addEventListener('seeked', ()=>{
+    _draw();
+    if(!ready){
+      ready = true;
+      ldScr.classList.add('hidden');
+      setTimeout(()=>ldScr.style.display='none', 750);
+    }
+    _seekBusy = false;
+    if(Math.abs(_seekTarget - video.currentTime) > 0.033){
+      _seekBusy = true;
+      video.currentTime = _seekTarget;
+    }
+  });
+
+  // Fallback: libera tela após 5s caso seeked não dispare
+  setTimeout(()=>{
+    if(!ready){ _draw(); ready=true; ldScr.classList.add('hidden'); setTimeout(()=>ldScr.style.display='none',750); }
+  }, 5000);
+
+  ldLine.style.setProperty('--w','100%');
+  ldPct.textContent = '100%';
+  video.pause();
+  _seek(0); // exibe primeiro frame
+});
+
+// ── Scroll (desktop) ─────────────────────────────────────────────
 const heroContent = document.getElementById('heroContent');
 const titleGroup  = document.getElementById('titleGroup');
 const scrollCue   = document.getElementById('scrollCue');
 const prog        = document.getElementById('prog');
-let   _heroH  = heroFixedEl ? heroFixedEl.offsetHeight : innerHeight;
-let   _trackH = heroTrackEl ? heroTrackEl.offsetHeight : innerHeight * 7;
+const TRACK_VH    = 7; // zona de animação: 7× a altura da janela
 
-// Throttle de scroll com requestAnimationFrame (1 update por frame)
-let _rafPending = false;
-function onScroll(){
-  if(!ready) return;
+window.addEventListener('scroll', ()=>{
+  if(!ready || !_dur) return;
 
-  // trackMax = distância de scroll onde a animação completa
-  const trackMax = Math.max(1, _trackH - _heroH);
+  const trackMax = TRACK_VH * innerHeight;
   const frac     = Math.min(scrollY / trackMax, 1);
 
-  showFrame(frac);
-
-  // Fake sticky: hero fica fixed no topo até scrollY = trackMax,
-  // depois desliza p/ cima até desaparecer em scrollY = _trackH
-  if(scrollY <= trackMax){
-    heroFixedEl.style.transform = '';
-  } else if(scrollY >= _trackH){
-    heroFixedEl.style.transform = `translate3d(0,${-_heroH}px,0)`;
-  } else {
-    heroFixedEl.style.transform = `translate3d(0,${trackMax - scrollY}px,0)`;
-  }
+  _seek(frac * _dur);
 
   const pageMax = document.documentElement.scrollHeight - innerHeight;
-  prog.style.width = (scrollY/pageMax*100)+'%';
+  prog.style.width = (scrollY / pageMax * 100) + '%';
 
-  if(!isMobile){
-    titleGroup.style.transform = `translate3d(${scrollY*.018}px,${-scrollY*.11}px,0)`;
-  } else {
-    titleGroup.style.transform = 'none';
-  }
+  // Parallax sutil no título
+  titleGroup.style.transform = `translate(${scrollY*.018}px,${-scrollY*.11}px)`;
 
-  // Fade-out do conteúdo hero perto do final
-  const fadeStart = trackMax * .7;
+  // Fade-out do conteúdo hero
+  const fadeStart = trackMax * .52;
   heroContent.style.opacity = scrollY > fadeStart
-    ? Math.max(0, 1 - (scrollY - fadeStart) / (trackMax * .3))
+    ? Math.max(0, 1 - (scrollY - fadeStart) / (trackMax * .4))
     : '1';
 
   if(scrollCue) scrollCue.style.opacity = scrollY > 80 ? '0' : '1';
-}
-
-window.addEventListener('scroll', ()=>{
-  if(_rafPending) return;
-  _rafPending = true;
-  requestAnimationFrame(()=>{ _rafPending = false; onScroll(); });
 }, { passive:true });
 
-function onResize(){
-  // Sempre usa as dimensões reais do hero-fixed (100lvh estável)
-  const w = (heroFixedEl && heroFixedEl.offsetWidth)  || innerWidth;
-  const h = (heroFixedEl && heroFixedEl.offsetHeight) || innerHeight;
-  _heroH  = h;
-  _trackH = heroTrackEl ? heroTrackEl.offsetHeight : _trackH;
-  renderer.setSize(w, h);
-  mat.uniforms.uRes.value.set(w, h);
+// Redimensionamento
+window.addEventListener('resize', ()=>{
+  renderer.setSize(innerWidth, innerHeight);
+  mat.uniforms.uRes.value.set(innerWidth, innerHeight);
   tex.needsUpdate = true;
   renderer.render(scene, camera);
-}
-window.addEventListener('resize', onResize);
-if(window.visualViewport){
-  window.visualViewport.addEventListener('resize', onResize);
-}
+});
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
